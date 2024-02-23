@@ -11,6 +11,7 @@ import retrofit2.Response
 
 class DataDownloader {
     private val tag = "DataDownloader"
+
     fun getUsers(): Flow<List<User>> {
         val call = ApiClient.apiService.getUsers()
         val data = MutableStateFlow<List<UserResponse>>(emptyList())
@@ -38,5 +39,6 @@ class DataDownloader {
             }
         })
 
+        return data
     }
 }
