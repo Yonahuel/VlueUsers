@@ -1,13 +1,15 @@
 package com.ivlue.vlueusers.ui
 
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -31,6 +33,9 @@ fun HomeScreen(
     ) {
         items(state.items.size) { i ->
             val item = state.items[i]
+            if(i >= state.items.size - 1 && !state.endReached && !state.isLoading) {
+                viewModel.loadNextItems()
+            }
             Column(
                 modifier = modifier
                     .fillMaxWidth()
@@ -43,6 +48,18 @@ fun HomeScreen(
                 )
                 Spacer(modifier = modifier.height(8.dp))
                 Text(text = item.email)
+            }
+        }
+        item {
+            if (state.isLoading) {
+                Row(
+                    modifier = modifier
+                        .fillMaxWidth()
+                        .padding(8.dp),
+                    horizontalArrangement = Arrangement.Center
+                ) {
+                    CircularProgressIndicator()
+                }
             }
         }
     }

@@ -1,7 +1,6 @@
 package com.ivlue.vlueusers.viewmodel
 
 import android.app.Application
-import android.app.LauncherActivity.ListItem
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -38,7 +37,7 @@ class AppViewModel @Inject constructor(
             state.page + 1
         },
         onError = {
-            state = state.copy(error = it?.localizedMessage)
+            state = state.copy(error = it.localizedMessage)
         },
         onSuccess = { items, newKey ->
             state = state.copy(
@@ -50,15 +49,17 @@ class AppViewModel @Inject constructor(
     )
 
     init {
+        /*
         viewModelScope.launch {
             dataDownloader.getUsers().collect {
                 _users.value = it
             }
         }
+         */
         loadNextItems()
     }
 
-    private fun loadNextItems() {
+    fun loadNextItems() {
         viewModelScope.launch {
             paginator.loadNextItems()
         }
