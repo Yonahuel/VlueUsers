@@ -10,14 +10,16 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.ivlue.vlueusers.ui.theme.VlueUsersTheme
+import com.ivlue.vlueusers.viewmodel.AppViewModel
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
             VlueUsersTheme {
-                // A surface container using the 'background' color from the theme
+                val viewModel = viewModel<AppViewModel>()
                 Surface(
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
