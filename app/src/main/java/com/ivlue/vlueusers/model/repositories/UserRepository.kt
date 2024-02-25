@@ -1,10 +1,12 @@
 package com.ivlue.vlueusers.model.repositories
 
+import com.ivlue.vlueusers.model.network.DataDownloader
 import com.ivlue.vlueusers.model.network.entities.User
 import com.ivlue.vlueusers.model.network.entities.UserName
 import com.ivlue.vlueusers.model.network.entities.UserProfilePicture
 
-class UserRepository {
+class UserRepository(private val downloader: DataDownloader) {
+
     private val remoteDataSource = (1..100).map {
         User(
             UserName(
@@ -13,21 +15,28 @@ class UserRepository {
             ),
             email = "yonahuel2006@gmail.com",
             picture = UserProfilePicture(
-                large = "",
-                medium = "",
-                thumbnail = ""
+                large = "https://randomuser.me/api/portraits/men/75.jpg",
+                medium = "https://randomuser.me/api/portraits/med/men/75.jpg",
+                thumbnail = "https://randomuser.me/api/portraits/thumb/men/75.jpg"
             )
         )
     }
 
-    fun getItems(
-        page: Int,
-        pageSize: Int
-    ): Result<List<User>> {
+    private suspend fun getUsers(): List<User> {
+        val result = mutableListOf<User>()
+        downloader.getUsers().collect { users ->
+            result.addAll(users)
+        }
+        return result
+    }
+
+    suspend fun getItems(page: Int, pageSize: Int): Result<List<User>> {
+
         val startIndex = page * pageSize
-        return if (startIndex + pageSize <= remoteDataSource.size) {
+        val users = remoteDataSource
+        return if (startIndex + pageSize <= users.size) {
             Result.success(
-                remoteDataSource.slice(startIndex until startIndex + pageSize)
+                users.slice(startIndex until startIndex + pageSize)
             )
         } else Result.success(emptyList())
     }

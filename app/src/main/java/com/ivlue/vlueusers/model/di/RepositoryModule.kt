@@ -1,5 +1,6 @@
 package com.ivlue.vlueusers.model.di
 
+import com.ivlue.vlueusers.model.network.DataDownloader
 import com.ivlue.vlueusers.model.repositories.UserRepository
 import dagger.Module
 import dagger.Provides
@@ -12,5 +13,5 @@ import javax.inject.Singleton
 class RepositoryModule {
     @Provides
     @Singleton
-    fun provideRepository(): UserRepository { return UserRepository() }
+    fun provideRepository(downloader: DataDownloader): UserRepository { return UserRepository(downloader) }
 }

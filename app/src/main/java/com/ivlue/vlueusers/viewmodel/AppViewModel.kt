@@ -49,13 +49,12 @@ class AppViewModel @Inject constructor(
     )
 
     init {
-        /*
         viewModelScope.launch {
             dataDownloader.getUsers().collect {
                 _users.value = it
             }
         }
-         */
+
         loadNextItems()
     }
 
