@@ -1,6 +1,7 @@
 package com.ivlue.vlueusers.viewmodel
 
 import android.app.Application
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -24,6 +25,10 @@ class AppViewModel @Inject constructor(
 ): AndroidViewModel(application) {
     private val _users = MutableStateFlow<List<User>>(emptyList())
     val users = _users.asStateFlow()
+    // Current User
+    private val _user = MutableStateFlow<User?>(null)
+    val user = _user.asStateFlow()
+
     var state by mutableStateOf(ScreenState())
     private val paginator = DefaultPaginator(
         initialKey = state.page,
@@ -49,11 +54,13 @@ class AppViewModel @Inject constructor(
     )
 
     init {
+        /*
         viewModelScope.launch {
             dataDownloader.getUsers().collect {
                 _users.value = it
             }
         }
+         */
 
         loadNextItems()
     }
@@ -62,6 +69,10 @@ class AppViewModel @Inject constructor(
         viewModelScope.launch {
             paginator.loadNextItems()
         }
+    }
+
+    fun setUser(user: User) {
+        _user.value = user
     }
 }
 

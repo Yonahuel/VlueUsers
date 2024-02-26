@@ -13,9 +13,9 @@ import retrofit2.Response
 class DataDownloader {
     private val tag = "DataDownloader"
 
-    fun getUsers(): Flow<List<User>> {
+    fun getUsers(page: Int, results: Int, seed: String): Flow<List<User>> {
         val data = MutableStateFlow<List<User>>(emptyList())
-        val call = ApiClient.apiService.getUsers()
+        val call = ApiClient.apiService.getUsers(page = page, results = results, seed = seed)
 
         try {
             call.enqueue(object : Callback<UserResponse> {

@@ -24,16 +24,19 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
 import coil.compose.AsyncImage
 import com.ivlue.vlueusers.model.network.entities.User
+import com.ivlue.vlueusers.ui.navigation.Screen
 import com.ivlue.vlueusers.viewmodel.AppViewModel
 
 @Composable
 fun HomeScreen(
+    modifier: Modifier = Modifier,
     viewModel: AppViewModel,
-    modifier: Modifier = Modifier
+    navController: NavController
 ) {
-    val users by viewModel.users.collectAsState()
+    //val users by viewModel.users.collectAsState()
     val state = viewModel.state
     
     LazyColumn(
@@ -49,7 +52,7 @@ fun HomeScreen(
                     .fillMaxWidth()
                     .padding(16.dp)
             ) {
-                UserItem(user = item)
+                UserItem(user = item, navController = navController, viewModel = viewModel)
             }
         }
         item {
@@ -70,10 +73,15 @@ fun HomeScreen(
 @Composable
 fun UserItem(
     modifier: Modifier = Modifier,
-    user: User
+    viewModel: AppViewModel,
+    user: User,
+    navController: NavController
 ) {
     Card(
-        modifier = modifier.clickable {  }
+        modifier = modifier.clickable {
+            viewModel.setUser(user)
+            navController.navigate(Screen.Details.name)
+        }
     ) {
         Row {
             AsyncImage(

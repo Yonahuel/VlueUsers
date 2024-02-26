@@ -4,7 +4,7 @@ import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
 object RetrofitClient {
-    private const val BASE_URL = "https://randomuser.me/api/"
+    private const val BASE_URL = "https://randomuser.me/"
 
     val retrofit: Retrofit by lazy {
         Retrofit.Builder()
