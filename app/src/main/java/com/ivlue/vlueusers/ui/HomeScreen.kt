@@ -13,11 +13,13 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -36,34 +38,39 @@ fun HomeScreen(
     viewModel: AppViewModel,
     navController: NavController
 ) {
-    //val users by viewModel.users.collectAsState()
     val state = viewModel.state
-    
-    LazyColumn(
-        modifier = Modifier.fillMaxSize()
+
+    Surface(
+        color = MaterialTheme.colorScheme.background
     ) {
-        items(state.items.size) { i ->
-            val item = state.items[i]
-            if(i >= state.items.size - 1 && !state.endReached && !state.isLoading) {
-                viewModel.loadNextItems()
-            }
-            Column(
-                modifier = modifier
-                    .fillMaxWidth()
-                    .padding(16.dp)
-            ) {
-                UserItem(user = item, navController = navController, viewModel = viewModel)
-            }
-        }
-        item {
-            if (state.isLoading) {
-                Row(
+        LazyColumn(
+            modifier = Modifier
+                .padding(top = 60.dp)
+                .fillMaxSize()
+        ) {
+            items(state.items.size) { i ->
+                val item = state.items[i]
+                if(i >= state.items.size - 1 && !state.endReached && !state.isLoading) {
+                    viewModel.loadNextItems()
+                }
+                Column(
                     modifier = modifier
                         .fillMaxWidth()
-                        .padding(8.dp),
-                    horizontalArrangement = Arrangement.Center
+                        .padding(8.dp)
                 ) {
-                    CircularProgressIndicator()
+                    UserItem(user = item, navController = navController, viewModel = viewModel)
+                }
+            }
+            item {
+                if (state.isLoading) {
+                    Row(
+                        modifier = modifier
+                            .fillMaxWidth()
+                            .padding(8.dp),
+                        horizontalArrangement = Arrangement.Center
+                    ) {
+                        CircularProgressIndicator()
+                    }
                 }
             }
         }
@@ -81,13 +88,14 @@ fun UserItem(
         modifier = modifier.clickable {
             viewModel.setUser(user)
             navController.navigate(Screen.Details.name)
-        }
+        },
+        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.primary)
     ) {
         Row {
             AsyncImage(
                 modifier = modifier
                     .align(Alignment.CenterVertically)
-                    .padding(8.dp)
+                    .padding(vertical = 8.dp, horizontal = 12.dp)
                     .size(60.dp)
                     .clip(RoundedCornerShape(8.dp)),
                 model = user.picture.thumbnail,
@@ -102,7 +110,7 @@ fun UserItem(
                 Text(
                     text = "${user.name.first} ${user.name.last}",
                     fontSize = 20.sp,
-                    color = Color.Black
+                    color = Color.White
                 )
                 Spacer(modifier = modifier.height(8.dp))
                 Text(text = user.email)

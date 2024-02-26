@@ -1,6 +1,11 @@
 package com.ivlue.vlueusers.ui
 
+import android.annotation.SuppressLint
+import android.content.Context
+import android.content.Intent
+import android.net.Uri
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -8,7 +13,18 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.DateRange
+import androidx.compose.material.icons.filled.Email
+import androidx.compose.material.icons.filled.LocationOn
+import androidx.compose.material.icons.filled.Phone
+import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.ElevatedCard
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -16,68 +32,156 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import androidx.navigation.NavController
-import coil.compose.AsyncImage
+import coil.compose.SubcomposeAsyncImage
+import com.ivlue.vlueusers.ui.theme.LightGray
 import com.ivlue.vlueusers.viewmodel.AppViewModel
 
 @Composable
 fun DetailsScreen(
     modifier: Modifier = Modifier,
     viewModel: AppViewModel,
-    navController: NavController
 ) {
     val user = viewModel.user.collectAsState()
+    val context = LocalContext.current
 
     Surface(
         modifier = modifier.fillMaxSize(),
-        color = Color.Blue
+        color = MaterialTheme.colorScheme.background
     ) {
-        Column(
-            modifier = Modifier
-                .padding(16.dp)
-                .verticalScroll(rememberScrollState())
+        ElevatedCard(
+            colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.primary),
+            modifier = modifier.padding(start = 16.dp, end = 16.dp, top = 76.dp, bottom = 16.dp),
+            elevation = CardDefaults.cardElevation(defaultElevation = 8.dp)
         ) {
-            AsyncImage(
-                model = user.value?.picture?.large,
-                contentDescription = "User Image",
-                modifier = modifier
-                    .size(120.dp)
-                    .align(Alignment.CenterHorizontally)
-            )
-            Spacer(modifier = modifier.height(16.dp))
-            Text(
-                text = "${user.value?.name?.title} ${user.value?.name?.first} ${user.value?.name?.last}",
-                style = MaterialTheme.typography.headlineLarge,
-                textAlign = TextAlign.Center,
-                modifier = modifier.fillMaxWidth()
+            Column(
+                modifier = Modifier
+                    .padding(horizontal = 16.dp, vertical = 16.dp)
+                    .verticalScroll(rememberScrollState())
+            ) {
+                Surface(
+                    shadowElevation = 8.dp,
+                    modifier = modifier
+                        .clip(RoundedCornerShape(16.dp))
+                        .size(200.dp)
+                        .align(Alignment.CenterHorizontally)
+                ) {
+                    SubcomposeAsyncImage(
+                        model = user.value?.picture?.large,
+                        contentDescription = "User Image",
+                        modifier = modifier.fillMaxSize(),
+                        loading = {
+                            CircularProgressIndicator(
+                                modifier = modifier
+                                    .align(Alignment.Center)
+                                    .padding(16.dp)
+                            )
+                        }
+                    )
+                }
+                Spacer(modifier = modifier.height(16.dp))
+                Text(
+                    text = "${user.value?.name?.title} ${user.value?.name?.first} ${user.value?.name?.last}",
+                    style = MaterialTheme.typography.headlineLarge,
+                    textAlign = TextAlign.Center,
+                    modifier = modifier.fillMaxWidth()
                 )
-            Spacer(modifier = modifier.height(24.dp))
-            user.value?.let { UserDetailsItem(label = "Email: ", value = it.email) }
-            user.value?.let { UserDetailsItem(label = "Phone: ", value = it.phone) }
-            UserDetailsItem(
-                label = "Location: ",
-                value = "${user.value?.location?.street?.name} ${user.value?.location?.street?.number}")
-            user.value?.registered?.date?.let { UserDetailsItem(label = "Registered Date: ", value = it) }
+                Spacer(modifier = modifier.height(16.dp))
+                UserDetailsItem(
+                    label = "Email: ",
+                    value = user.value?.email ?: "null",
+                    icon = Icons.Filled.Email,
+                    onClick = { email ->
+                        val intent = Intent(Intent.ACTION_SENDTO)
+                        intent.data = Uri.parse("mailto:$email")
+                        context.startActivity(intent)
+                    }
+                )
+                UserDetailsItem(
+                    label = "Phone: ",
+                    value = user.value?.phone ?: "null",
+                    icon = Icons.Filled.Phone,
+                    onClick = { phone ->
+                        val intent = Intent(Intent.ACTION_DIAL)
+                        intent.data = Uri.parse("tel:$phone")
+                        context.startActivity(intent)
+                    }
+                )
+                UserDetailsItem(
+                    label = "Location: ",
+                    value = "${user.value?.location?.street?.name} ${user.value?.location?.street?.number}, ${user.value?.location?.city}",
+                    icon = Icons.Filled.LocationOn,
+                    onClick = {
+                        openLocationInMaps(user.value?.location?.coordinates?.latitude ?: 0.0, user.value?.location?.coordinates?.longitude ?: 0.0, context)
+                    }
+                )
+                UserDetailsItem(
+                    label = "Registered Date: ",
+                    value = user.value?.registered?.date ?: "null",
+                    icon = Icons.Filled.DateRange
+                )
+            }
         }
     }
 }
+@SuppressLint("QueryPermissionsNeeded")
+fun openLocationInMaps(
+    latitude: Double,
+    longitude: Double,
+    context: Context
+) {
+    val gmmIntentUri = Uri.parse("geo:$latitude,$longitude?z=1")
+    val mapIntent = Intent(Intent.ACTION_VIEW, gmmIntentUri)
+    mapIntent.setPackage("com.google.android.apps.maps")
+    context.startActivity(mapIntent)
+}
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
-private fun UserDetailsItem(label: String, value: String) {
-    Column(
-        modifier = Modifier.padding(vertical = 4.dp)
+private fun UserDetailsItem(
+    modifier: Modifier = Modifier,
+    label: String,
+    value: String,
+    onClick: ((String) -> Unit)? = null,
+    icon: ImageVector
+) {
+    ElevatedCard(
+        colors = CardDefaults.cardColors(containerColor = LightGray),
+        elevation = CardDefaults.cardElevation(defaultElevation = 8.dp),
+        onClick = { onClick?.invoke(value) },
+        modifier = modifier
+            .fillMaxWidth()
+            .padding(16.dp)
     ) {
-        Text(
-            text = label,
-            style = MaterialTheme.typography.bodyMedium,
-            color = Color.Gray
-        )
-        Text(
-            text = value,
-            style = MaterialTheme.typography.bodyMedium
-        )
+        Row(
+            modifier = modifier.padding(4.dp)
+        ) {
+            Icon(
+                imageVector = icon,
+                contentDescription = label,
+                tint = MaterialTheme.colorScheme.onSurface,
+                modifier = modifier
+                    .padding(8.dp)
+                    .align(Alignment.CenterVertically)
+            )
+            Column(
+                modifier = Modifier.padding(vertical = 4.dp)
+            ) {
+                Text(
+                    text = label,
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = MaterialTheme.colorScheme.onSurface
+                )
+                Text(
+                    text = value,
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = MaterialTheme.colorScheme.onSurface
+                )
+            }
+        }
     }
 }

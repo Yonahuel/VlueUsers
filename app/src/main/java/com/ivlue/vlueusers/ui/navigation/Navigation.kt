@@ -18,7 +18,7 @@ fun Navigate(
             HomeScreen(viewModel = viewModel, navController = navController)
         }
         composable(Screen.Details.name) {
-            DetailsScreen(viewModel = viewModel, navController = navController)
+            DetailsScreen(viewModel = viewModel)
         }
     }
 }
