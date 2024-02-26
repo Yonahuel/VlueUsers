@@ -1,7 +1,6 @@
 package com.ivlue.vlueusers.viewmodel
 
 import android.app.Application
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -81,5 +80,5 @@ data class ScreenState(
     val items: List<User> = emptyList(),
     val error: String? = null,
     val endReached: Boolean = false,
-    val page: Int = 0
+    val page: Int = 1
 )
