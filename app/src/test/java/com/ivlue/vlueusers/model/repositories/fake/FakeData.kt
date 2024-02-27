@@ -9,6 +9,9 @@ import com.ivlue.vlueusers.model.network.entities.User
 import com.ivlue.vlueusers.model.network.entities.UserName
 import com.ivlue.vlueusers.model.network.entities.UserProfilePicture
 
+/**
+ * Fake data for testing purposes.
+ */
 val remoteDataSource = (1..100).map {
     User(
         name = UserName(

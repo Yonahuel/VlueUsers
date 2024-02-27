@@ -8,8 +8,20 @@ import retrofit2.Callback
 import retrofit2.Response
 import kotlin.coroutines.resume
 
+/**
+ * This class handles the downloading of user data from the API.
+ */
 class DataDownloader {
     private val tag = "DataDownloader"
+    /**
+     * Fetches a list of users from the API.
+     *
+     * @param page The page number to retrieve.
+     * @param results The number of results per page.
+     * @param seed The seed value for the API request.
+     * @param apiClient The [ApiClient] instance used to make the API call. Default is [ApiClient].
+     * @return A list of [User] objects.
+     */
 
     suspend fun getUsers(
         page: Int,

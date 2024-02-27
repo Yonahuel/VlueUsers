@@ -33,27 +33,40 @@ import com.ivlue.vlueusers.ui.navigation.Screen
 import com.ivlue.vlueusers.ui.theme.DarkBlue
 import com.ivlue.vlueusers.viewmodel.AppViewModel
 
+/**
+ * Composable function responsible for displaying the home screen, showing a list of users.
+ *
+ * @param modifier Modifier to apply to the composable.
+ * @param viewModel View model containing the state and logic for the home screen.
+ * @param navController Navigation controller used for navigating to other screens.
+ */
 @Composable
 fun HomeScreen(
     modifier: Modifier = Modifier,
     viewModel: AppViewModel,
     navController: NavController
 ) {
+    // Retrieves the state from the view model
     val state = viewModel.state
 
+    // Renders the home screen UI
     Surface(
         color = MaterialTheme.colorScheme.background
     ) {
+        // LazyColumn to efficiently display a list of items
         LazyColumn(
             modifier = Modifier
                 .padding(top = 60.dp)
                 .fillMaxSize()
         ) {
+            // Iterates through the list of items in the state
             items(state.items.size) { i ->
                 val item = state.items[i]
+                // Loads more items if reaching the end of the list
                 if(i >= state.items.size - 1 && !state.endReached && !state.isLoading) {
                     viewModel.loadNextItems()
                 }
+                // Renders a user item
                 Column(
                     modifier = modifier
                         .fillMaxWidth()
@@ -62,6 +75,7 @@ fun HomeScreen(
                     UserItem(user = item, navController = navController, viewModel = viewModel)
                 }
             }
+            // Renders a loading indicator if data is still loading
             item {
                 if (state.isLoading) {
                     Row(
@@ -78,6 +92,14 @@ fun HomeScreen(
     }
 }
 
+/**
+ * Composable function representing a single user item in the list.
+ *
+ * @param modifier Modifier to apply to the composable.
+ * @param viewModel View model containing user-related data and logic.
+ * @param user User data to display.
+ * @param navController Navigation controller used for navigating to other screens.
+ */
 @Composable
 fun UserItem(
     modifier: Modifier = Modifier,
@@ -85,6 +107,7 @@ fun UserItem(
     user: User,
     navController: NavController
 ) {
+    // Renders a clickable card representing a user item
     Card(
         modifier = modifier
             .testTag("UserCard")
@@ -94,6 +117,7 @@ fun UserItem(
             },
         colors = CardDefaults.cardColors(containerColor = DarkBlue)
     ) {
+        // Displays user information within the card
         Row {
             AsyncImage(
                 modifier = modifier

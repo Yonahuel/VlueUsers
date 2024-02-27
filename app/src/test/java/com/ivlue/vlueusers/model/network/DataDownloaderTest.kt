@@ -12,15 +12,24 @@ import retrofit2.Call
 import retrofit2.Response
 import retrofit2.Callback
 
+/**
+ * Unit test class for testing the [DataDownloader] class.
+ */
 class DataDownloaderTest {
+    /**
+     * Test case for the [DataDownloader.getUsers] method.
+     */
     @Test
     fun test_getUsers() = runBlocking{
+        // Create mocks for ApiService, ApiClient, and DataDownloader
         val apiService = mockk<UserService>()
         val apiClient = mockk<ApiClient>()
         val downloader = DataDownloader()
 
+        // Create a mock API response
         val apiResponse = UserResponse(emptyList(), Info("seed", 10, 1, "version"))
 
+        // Create a mocked Call object
         val mockedCall = mockk<Call<UserResponse>>()
 
         // Mock the behavior of ApiService methods using MockK's coEvery
@@ -29,12 +38,16 @@ class DataDownloaderTest {
         // Mock the enqueue behavior of the mockedCall
         every { mockedCall.enqueue(any()) } answers {
             val callback = args[0] as Callback<UserResponse>
-            callback.onResponse(mockk(), Response.success(UserResponse(emptyList(), Info("seed", 10, 1, "version"))))
+            callback.onResponse(mockk(), Response.success(apiResponse))
         }
 
+        // Mock the apiService property of the apiClient
         every { apiClient.apiService } returns apiService
 
+        // Invoke the method under test
         val result = downloader.getUsers(1, 10, "seed", apiClient)
+
+        // Assert the result
         assertEquals(emptyList< User>(), result)
     }
 }

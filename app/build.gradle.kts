@@ -1,3 +1,5 @@
+import com.android.build.api.dsl.Packaging
+
 plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
@@ -48,6 +50,8 @@ android {
     packaging {
         resources {
             excludes += "/META-INF/{AL2.0,LGPL2.1}"
+            merges += "META-INF/LICENSE.md"
+            merges += "META-INF/LICENSE-notice.md"
         }
     }
 }
@@ -83,8 +87,8 @@ dependencies {
     // Mock
     //testImplementation("org.mockito:mockito-core:5.9.0")
     testImplementation("io.mockk:mockk:1.13.9")
-    androidTestImplementation("io.mockk:mockk:1.13.9")
-    androidTestImplementation("org.mockito:mockito-core:5.9.0")
+    androidTestImplementation("io.mockk:mockk-android:1.13.9")
+    androidTestImplementation("org.mockito:mockito-android:4.0.0")
     androidTestImplementation("org.mockito.kotlin:mockito-kotlin:4.0.0")
 
     testImplementation("junit:junit:4.13.2")

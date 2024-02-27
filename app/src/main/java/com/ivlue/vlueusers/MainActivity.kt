@@ -18,6 +18,10 @@ import com.ivlue.vlueusers.ui.utils.TopBar
 import com.ivlue.vlueusers.viewmodel.AppViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
+/**
+ * Main entry point activity for the Vlue Users Android application.
+ * Responsible for setting up the activity and displaying the main user interface.
+ */
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -36,18 +40,22 @@ class MainActivity : ComponentActivity() {
     }
 }
 
+/**
+ * Composable function representing the main content of the application.
+ *
+ * @param viewModel View model for managing application data.
+ */
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
 fun MainApp(
     viewModel: AppViewModel
 ) {
+    // Creates a NavHostController to manage navigation within the app
     val navController = rememberNavController()
 
+    // Renders the main app content using Scaffold
     Scaffold(
         topBar = { TopBar(navController) },
         content = { Navigate(navController = navController, viewModel = viewModel) }
     )
 }
-
-
-

@@ -19,15 +19,24 @@ import com.ivlue.vlueusers.ui.navigation.Screen
 import com.ivlue.vlueusers.ui.theme.DarkBlue
 import com.ivlue.vlueusers.ui.theme.LightBlue
 
+/**
+ * Composable function responsible for displaying the top app bar.
+ * The appearance and behavior of the app bar are customized based on the current screen.
+ *
+ * @param navController The NavController responsible for managing navigation actions.
+ */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun TopBar(
     navController: NavController
 ) {
+    // Retrieves the current screen from the navigation controller
     val currentScreen = navController.currentBackStackEntryAsState().value?.destination
 
+    // Displays a customized top app bar based on the current screen
     CenterAlignedTopAppBar(
         title = {
+            // Displays different titles based on the current screen
             if (currentScreen?.route == Screen.Home.name) {
                 Text(
                     text = "Vlue Users",
@@ -44,8 +53,10 @@ fun TopBar(
                 )
             }
         },
+        // Sets custom colors for the app bar
         colors = topAppBarColors(containerColor = DarkBlue),
         navigationIcon = {
+            // Displays a back button if the current screen is the details screen
             if (currentScreen?.route == Screen.Details.name) {
                 IconButton(
                     onClick = { navController.navigateUp() }

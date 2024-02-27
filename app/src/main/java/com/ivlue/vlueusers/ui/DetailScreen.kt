@@ -42,11 +42,18 @@ import com.ivlue.vlueusers.ui.theme.DarkBlue
 import com.ivlue.vlueusers.ui.theme.LightGray
 import com.ivlue.vlueusers.viewmodel.AppViewModel
 
+/**
+ * Composable function responsible for displaying the details screen for a user.
+ *
+ * @param modifier Modifier to apply to the composable.
+ * @param viewModel View model containing user data.
+ */
 @Composable
 fun DetailsScreen(
     modifier: Modifier = Modifier,
     viewModel: AppViewModel,
 ) {
+    // Collects user data from the view model as a state
     val user = viewModel.user.collectAsState()
     val context = LocalContext.current
 
@@ -64,6 +71,7 @@ fun DetailsScreen(
                     .padding(horizontal = 16.dp, vertical = 16.dp)
                     .verticalScroll(rememberScrollState())
             ) {
+                // Displays user image
                 Surface(
                     shadowElevation = 8.dp,
                     modifier = modifier
@@ -85,6 +93,7 @@ fun DetailsScreen(
                     )
                 }
                 Spacer(modifier = modifier.height(16.dp))
+                // Displays user name
                 Text(
                     text = "${user.value?.name?.title} ${user.value?.name?.first} ${user.value?.name?.last}",
                     style = MaterialTheme.typography.headlineLarge,
@@ -92,6 +101,7 @@ fun DetailsScreen(
                     modifier = modifier.fillMaxWidth()
                 )
                 Spacer(modifier = modifier.height(16.dp))
+                // Displays user details items
                 UserDetailsItem(
                     label = "Email: ",
                     value = user.value?.email ?: "null",
@@ -129,6 +139,13 @@ fun DetailsScreen(
         }
     }
 }
+
+/**
+ * Opens the location in Maps using the provided latitude and longitude coordinates.
+ *
+ * @param latitude Latitude coordinate of the location.
+ * @param longitude Longitude coordinate of the location.
+ */
 @SuppressLint("QueryPermissionsNeeded")
 fun openLocationInMaps(
     latitude: Double,
@@ -141,6 +158,15 @@ fun openLocationInMaps(
     context.startActivity(mapIntent)
 }
 
+/**
+ * Composable function representing a single user details item.
+ *
+ * @param modifier Modifier to apply to the composable.
+ * @param label Label text for the details item.
+ * @param value Value text for the details item.
+ * @param onClick Callback function invoked when the item is clicked.
+ * @param icon Icon associated with the details item.
+ */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun UserDetailsItem(
@@ -150,6 +176,7 @@ private fun UserDetailsItem(
     onClick: ((String) -> Unit)? = null,
     icon: ImageVector
 ) {
+    // Renders a clickable elevated card with the specified details
     ElevatedCard(
         colors = CardDefaults.cardColors(containerColor = LightGray),
         elevation = CardDefaults.cardElevation(defaultElevation = 8.dp),
@@ -161,6 +188,7 @@ private fun UserDetailsItem(
         Row(
             modifier = modifier.padding(4.dp)
         ) {
+            // Renders the icon associated with the details item
             Icon(
                 imageVector = icon,
                 contentDescription = label,
@@ -172,11 +200,13 @@ private fun UserDetailsItem(
             Column(
                 modifier = Modifier.padding(vertical = 4.dp)
             ) {
+                // Renders the label text
                 Text(
                     text = label,
                     style = MaterialTheme.typography.bodyMedium,
                     color = MaterialTheme.colorScheme.onSurface
                 )
+                // Renders the value text
                 Text(
                     text = value,
                     style = MaterialTheme.typography.bodyMedium,
