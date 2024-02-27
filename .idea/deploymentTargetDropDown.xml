@@ -10,13 +10,16 @@
               <deviceKey>
                 <Key>
                   <type value="VIRTUAL_DEVICE_PATH" />
-                  <value value="C:\Users\ncueto\.android\avd\Test.avd" />
+                  <value value="C:\Users\yonah\.android\avd\Pixel_5_API_34.avd" />
                 </Key>
               </deviceKey>
             </Target>
           </targetSelectedWithDropDown>
-          <timeTargetWasSelectedWithDropDown value="2024-02-26T13:35:11.167511400Z" />
+          <timeTargetWasSelectedWithDropDown value="2024-02-26T23:48:52.729371800Z" />
         </State>
+      </entry>
+      <entry key="testNavigationToDetailsScreen()">
+        <State />
       </entry>
     </value>
   </component>

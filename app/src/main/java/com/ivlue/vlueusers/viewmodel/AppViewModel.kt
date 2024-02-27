@@ -6,7 +6,6 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
-import com.ivlue.vlueusers.model.network.DataDownloader
 import com.ivlue.vlueusers.model.network.entities.User
 import com.ivlue.vlueusers.model.repositories.UserRepository
 import com.ivlue.vlueusers.model.utils.DefaultPaginator
@@ -19,11 +18,8 @@ import javax.inject.Inject
 @HiltViewModel
 class AppViewModel @Inject constructor(
     application: Application,
-    private val dataDownloader: DataDownloader,
     private val repository: UserRepository
 ): AndroidViewModel(application) {
-    private val _users = MutableStateFlow<List<User>>(emptyList())
-    val users = _users.asStateFlow()
     // Current User
     private val _user = MutableStateFlow<User?>(null)
     val user = _user.asStateFlow()
@@ -35,7 +31,7 @@ class AppViewModel @Inject constructor(
             state = state.copy(isLoading = it)
         },
         onRequest = { nextPage ->
-            repository.getItems(nextPage, 20)
+            repository.getItems(nextPage)
         },
         getNextKey = {
             state.page + 1
@@ -53,14 +49,6 @@ class AppViewModel @Inject constructor(
     )
 
     init {
-        /*
-        viewModelScope.launch {
-            dataDownloader.getUsers().collect {
-                _users.value = it
-            }
-        }
-         */
-
         loadNextItems()
     }
 

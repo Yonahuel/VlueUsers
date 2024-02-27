@@ -13,4 +13,9 @@ interface UserService {
         @Query("results") results: Int,
         @Query("seed") seed: String
         ): Call<UserResponse>
+
+    /*
+    @GET("api/?results=100")
+    fun getUsers(): Call<UserResponse>
+     */
 }

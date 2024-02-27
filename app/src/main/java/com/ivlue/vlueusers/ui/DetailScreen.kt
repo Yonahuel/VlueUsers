@@ -38,6 +38,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import coil.compose.SubcomposeAsyncImage
+import com.ivlue.vlueusers.ui.theme.DarkBlue
 import com.ivlue.vlueusers.ui.theme.LightGray
 import com.ivlue.vlueusers.viewmodel.AppViewModel
 
@@ -54,7 +55,7 @@ fun DetailsScreen(
         color = MaterialTheme.colorScheme.background
     ) {
         ElevatedCard(
-            colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.primary),
+            colors = CardDefaults.cardColors(containerColor = DarkBlue),
             modifier = modifier.padding(start = 16.dp, end = 16.dp, top = 76.dp, bottom = 16.dp),
             elevation = CardDefaults.cardElevation(defaultElevation = 8.dp)
         ) {

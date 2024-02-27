@@ -1,49 +1,44 @@
 package com.ivlue.vlueusers.model.network
 
-import android.util.Log
 import com.ivlue.vlueusers.model.network.entities.User
 import com.ivlue.vlueusers.model.network.entities.UserResponse
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.suspendCancellableCoroutine
 import retrofit2.Call
 import retrofit2.Callback
-import retrofit2.HttpException
 import retrofit2.Response
+import kotlin.coroutines.resume
 
 class DataDownloader {
     private val tag = "DataDownloader"
 
-    fun getUsers(page: Int, results: Int, seed: String): Flow<List<User>> {
-        val data = MutableStateFlow<List<User>>(emptyList())
-        val call = ApiClient.apiService.getUsers(page = page, results = results, seed = seed)
+    suspend fun getUsers(
+        page: Int,
+        results: Int,
+        seed: String,
+        apiClient: ApiClient = ApiClient
+    ): List<User> {
+        return suspendCancellableCoroutine { continuation ->
+            val call = apiClient.apiService.getUsers(page = page, results = results, seed = seed)
 
-        try {
             call.enqueue(object : Callback<UserResponse> {
                 override fun onResponse(call: Call<UserResponse>, response: Response<UserResponse>) {
-                    Log.d(tag, "server connected at: " + call.request().url)
-
                     if (response.isSuccessful) {
                         val usersResponse = response.body()
-                        if (usersResponse != null) {
-                            val users = usersResponse.results
-                            data.value = users
-                        } else {
-                            Log.d(tag, "Empty response")
-                        }
+                        val users = usersResponse?.results ?: emptyList()
+                        continuation.resume(users)
                     } else {
-                        Log.d(tag, "HTTP error code: " + response.code() + ", message: " + response.message())
+                        continuation.resume(emptyList())
                     }
                 }
+
                 override fun onFailure(call: Call<UserResponse>, t: Throwable) {
-                    Log.d(tag, "downloadUsers - call failed against url: " + call.request().url)
-                    call.cancel()
+                    continuation.resume(emptyList())
                 }
             })
-        } catch (e: HttpException) {
-            Log.d(tag, "Unknown http error: ${e.message}")
-        } catch (e: Exception) {
-            Log.d(tag, "Unknown error: ${e.message}")
+
+            continuation.invokeOnCancellation {
+                call.cancel()
+            }
         }
-        return data
     }
 }
