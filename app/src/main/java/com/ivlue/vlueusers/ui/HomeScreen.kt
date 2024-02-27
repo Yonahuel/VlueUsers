@@ -140,7 +140,7 @@ fun UserItem(
                     color = Color.White
                 )
                 Spacer(modifier = modifier.height(8.dp))
-                Text(text = user.email)
+                Text(text = "Email: " + user.email)
             }
         }
     }

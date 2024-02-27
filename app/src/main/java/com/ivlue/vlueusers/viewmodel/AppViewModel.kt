@@ -22,7 +22,7 @@ import javax.inject.Inject
  * @param repository The repository for accessing user data.
  */
 @HiltViewModel
-class AppViewModel @Inject constructor(
+open class AppViewModel @Inject constructor(
     application: Application,
     private val repository: UserRepository
 ): AndroidViewModel(application) {

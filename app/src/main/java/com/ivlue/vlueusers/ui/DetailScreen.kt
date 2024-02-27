@@ -4,6 +4,8 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -48,6 +50,7 @@ import com.ivlue.vlueusers.viewmodel.AppViewModel
  * @param modifier Modifier to apply to the composable.
  * @param viewModel View model containing user data.
  */
+@RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun DetailsScreen(
     modifier: Modifier = Modifier,
@@ -130,9 +133,10 @@ fun DetailsScreen(
                         openLocationInMaps(user.value?.location?.coordinates?.latitude ?: 0.0, user.value?.location?.coordinates?.longitude ?: 0.0, context)
                     }
                 )
+                val date = user.value?.registered?.date?.substringBefore("T")
                 UserDetailsItem(
                     label = "Registered Date: ",
-                    value = user.value?.registered?.date ?: "null",
+                    value = "${date}",
                     icon = Icons.Filled.DateRange
                 )
             }

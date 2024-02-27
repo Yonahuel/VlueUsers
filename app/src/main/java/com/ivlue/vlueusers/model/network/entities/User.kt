@@ -8,7 +8,7 @@ import com.google.gson.annotations.SerializedName
  * @property info Additional information about the response.
  */
 data class UserResponse(
-    @SerializedName("results") val results: List<User>,
+    @SerializedName("results") val results: List<User> = emptyList(),
     @SerializedName("info") val info: Info
 )
 
@@ -79,7 +79,7 @@ data class Location(
  */
 data class Street(
     @SerializedName("number") val number: Int,
-    @SerializedName("name") val name: String,
+    @SerializedName("name") val name: String
 )
 
 /**
