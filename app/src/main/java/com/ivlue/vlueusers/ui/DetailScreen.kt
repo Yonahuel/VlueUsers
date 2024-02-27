@@ -171,7 +171,7 @@ fun openLocationInMaps(
  * @param icon Icon associated with the details item.
  */
 @Composable
-private fun UserDetailsItem(
+fun UserDetailsItem(
     modifier: Modifier = Modifier,
     label: String,
     value: String,
