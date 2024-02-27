@@ -25,7 +25,6 @@ import androidx.compose.material.icons.filled.Phone
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ElevatedCard
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
@@ -136,7 +135,7 @@ fun DetailsScreen(
                 val date = user.value?.registered?.date?.substringBefore("T")
                 UserDetailsItem(
                     label = "Registered Date: ",
-                    value = "${date}",
+                    value = "$date",
                     icon = Icons.Filled.DateRange
                 )
             }
@@ -171,7 +170,6 @@ fun openLocationInMaps(
  * @param onClick Callback function invoked when the item is clicked.
  * @param icon Icon associated with the details item.
  */
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun UserDetailsItem(
     modifier: Modifier = Modifier,
